@@ -3,28 +3,22 @@ import base64
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, CallbackQueryHandler, filters
 
-# লগিং সেটআপ
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-# আপনার টেলিগ্রাম বটের API টোকেন
 TOKEN = "9095452020:AAEmhuXEeYpHoOINqtjSm8IZLh7w9JnOJ9A"
 
-# ব্র্যান্ডিং তথ্য ও চ্যানেলের তালিকা
 TEAM_NAME = "MAHID DVP HELP TEAM"
 ADMIN_HANDLE = "@DWC_ADMIN_MAHID"
 REQUIRED_CHANNELS = ["@NCK_Dev", "@ERRORX404E", "@NCKDEVFreeSC"]
 
-# ব্যবহারকারী ভেরিফাই হয়েছে কি না ট্র্যাক করার জন্য
 verified_users = set()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    
     if user_id in verified_users:
         await show_main_menu(update, context)
         return
 
-    # চ্যানেল ভেরিফিকেশন বাটন
     keyboard = []
     for ch in REQUIRED_CHANNELS:
         keyboard.append([InlineKeyboardButton(f"📢 Join {ch}", url=f"https://t.me/{ch.replace('@', '')}")])
@@ -51,10 +45,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         verified_users.add(user_id)
         await query.message.delete()
         await show_main_menu_callback(query, context)
-
     elif query.data == "main_menu":
         await show_main_menu_callback(query, context)
-
     elif query.data == "protect_code_menu":
         keyboard = [[InlineKeyboardButton("❌ Cancel", callback_data="main_menu")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -75,7 +67,6 @@ async def show_main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("👨‍💻 Telegram Admin", url=f"https://t.me/{ADMIN_HANDLE.replace('@', '')}")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
     caption_text = (
         "✅ <b>VERIFIED!</b>\n\n"
         f"Thank you for joining our channels, {update.effective_user.first_name}!\n\n"
@@ -91,7 +82,6 @@ async def show_main_menu_callback(query, context):
         [InlineKeyboardButton("👨‍💻 Telegram Admin", url=f"https://t.me/{ADMIN_HANDLE.replace('@', '')}")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    
     caption_text = (
         "✅ <b>VERIFIED!</b>\n\n"
         f"Thank you for joining our channels!\n\n"
@@ -182,7 +172,6 @@ Status: MAXIMUM ANTI-DECODER SHIELD & CLOCK LOCK ACTIVE 🛑
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
-
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), process_code))
