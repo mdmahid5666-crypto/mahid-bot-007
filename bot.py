@@ -121,7 +121,6 @@ async def process_code(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     processing_msg = await update.message.reply_text("⏳ কোড প্রসেসিং এবং সিকিউরিটি শিল্ড যুক্ত করা হচ্ছে...")
 
-    # এনক্রিপশন ও ওফাসকেশন লজিক
     encoded1 = base64.b64encode(raw_code.encode("utf-8")).decode("utf-8")
     shifted = "".join([chr(ord(c) + 5) for c in encoded1])
     final_payload = base64.b64encode(shifted.encode("utf-8")).decode("utf-8")
@@ -190,7 +189,6 @@ def main():
     app.add_handler(MessageHandler(filters.Document.ALL, process_code))
 
     print("🤖 MAHID DVP Bot is running successfully...")
-    # drop_pending_updates=True ব্যবহারের ফলে আগের সব কনফ্লিক্ট বা জট দূর হয়ে যাবে
     app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":
